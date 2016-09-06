@@ -1,47 +1,36 @@
 package fr.lteconsulting.server;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
+import com.google.gwt.user.client.rpc.SerializationException;
+import com.google.gwt.user.server.rpc.RPC;
+import com.google.gwt.user.server.rpc.RPCRequest;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
-import fr.lteconsulting.client.Mots;
-import fr.lteconsulting.shared.Personne;
-import fr.lteconsulting.shared.PersonnesService;
-import fr.lteconsulting.shared.Sexe;
-
-public class PersonnesServiceImpl extends RemoteServiceServlet implements PersonnesService
+public class PersonnesServiceImpl extends RemoteServiceServlet
 {
 	private static final long serialVersionUID = 8040896818489712249L;
 
-	private static List<Personne> database;
-
-	static
-	{
-		database = new ArrayList<>();
-		genererDonnees();
-	}
+	private static PersonnesRepository repository = new PersonnesRepository();
 
 	@Override
-	public List<Personne> getPersonnes()
+	public String processCall( String payload ) throws SerializationException
 	{
-		return database;
-	}
+		// First, check for possible XSRF situation
+		checkPermutationStrongName();
 
-	private static void genererDonnees()
-	{
-		for( int i = 0; i < 10; i++ )
+		RPCRequest rpcRequest = null;
+		try
 		{
-			Personne personne = new Personne();
-			personne.setNom( Mots.nom() );
-			personne.setPrenom( Mots.nom() );
-			personne.setDateNaissance( new Date() );
-			personne.setMotDePasse( Mots.mot() );
-			personne.setSexe( Math.random() > 0.5 ? Sexe.Homme : Sexe.Femme );
-			personne.setAccepteMarketing( Math.random() > 0.5 );
+			rpcRequest = RPC.decodeRequest( payload, repository.getClass(), this );
 
-			database.add( personne );
+			Object result = rpcRequest.getMethod().invoke( repository, rpcRequest.getParameters() );
+
+			return RPC.encodeResponseForSuccess( rpcRequest.getMethod(), result, rpcRequest.getSerializationPolicy(), rpcRequest.getFlags() );
+
+		}
+		catch( Exception ex )
+		{
+			log( "An " + ex.getClass().getSimpleName() + " was thrown while processing this call.", ex );
+			return RPC.encodeResponseForFailedRequest( rpcRequest, ex );
 		}
 	}
 }
