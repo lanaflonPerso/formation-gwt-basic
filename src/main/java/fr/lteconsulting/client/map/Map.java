@@ -13,16 +13,9 @@ public class Map
 	public static native boolean googleMapsInitialized();
 
 	@JsType( isNative = true, namespace = JsPackage.GLOBAL, name = "Object" )
-	public static class Position
-	{
-		public double lat;
-		public double lng;
-	}
-
-	@JsType( isNative = true, namespace = JsPackage.GLOBAL, name = "Object" )
 	public static class Options
 	{
-		public Position center;
+		public LatLngLiteral center;
 		public String mapTypeId;
 		public boolean scrollwheel;
 		public int zoom;
@@ -32,4 +25,6 @@ public class Map
 	{
 		// Vide car implémenté en JS
 	}
+
+	public native void setCenter( LatLngLiteral position );
 }

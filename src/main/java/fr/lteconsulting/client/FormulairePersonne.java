@@ -9,6 +9,9 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.datepicker.client.DatePicker;
 
+import fr.lteconsulting.client.map.GoogleMapsWidget;
+import fr.lteconsulting.client.map.LatLng;
+import fr.lteconsulting.client.map.Marker;
 import fr.lteconsulting.shared.Personne;
 import fr.lteconsulting.shared.Sexe;
 
@@ -20,6 +23,8 @@ public class FormulairePersonne extends Composite
 	private PasswordTextBox motDePasse = new PasswordTextBox();
 	private ListBox sexe = new ListBox();
 	private CheckBox accepteMarketing = new CheckBox();
+	private GoogleMapsWidget map = new GoogleMapsWidget();
+	private Marker marker = null;
 
 	public FormulairePersonne()
 	{
@@ -38,6 +43,8 @@ public class FormulairePersonne extends Composite
 		personne.setAccepteMarketing( accepteMarketing.getValue() );
 		personne.setSexe( getSelectedSexe() );
 		personne.setMotDePasse( motDePasse.getText() );
+		personne.setLatitude( marker.getPosition().lat() );
+		personne.setLongitude( marker.getPosition().lng() );
 	}
 
 	public void updateFormFromPersonne( Personne p )
@@ -49,6 +56,8 @@ public class FormulairePersonne extends Composite
 			accepteMarketing.setValue( false );
 			selectSexe( Sexe.Femme );
 			motDePasse.setText( "" );
+			marker.setPosition( new LatLng( 0, 0 ) );
+			map.setCenter( 0, 0 );
 		}
 		else
 		{
@@ -59,6 +68,8 @@ public class FormulairePersonne extends Composite
 			motDePasse.setText( p.getMotDePasse() );
 			selectSexe( p.getSexe() );
 			accepteMarketing.setValue( p.isAccepteMarketing() );
+			marker.setPosition( new LatLng( p.getLatitude(), p.getLongitude() ) );
+			map.setCenter( p.getLatitude(), p.getLongitude() );
 		}
 	}
 
@@ -84,13 +95,19 @@ public class FormulairePersonne extends Composite
 		table.setText( 5, 0, "Accepte le marketing" );
 		table.setWidget( 5, 1, accepteMarketing );
 
+		table.setText( 6, 0, "Domicile" );
+		table.setWidget( 6, 1, map );
+
+		map.setSize( "20em", "20em" );
+		marker = map.addMarker( 0, 0, "Domicile", true );
+
 		return table;
 	}
 
 	private void initListBox()
 	{
 		for( Sexe value : Sexe.values() )
-			sexe.addItem( value.name(), value.name() );
+			sexe.addItem( "" + value, "" + value );
 		sexe.addItem( "", "" );
 	}
 

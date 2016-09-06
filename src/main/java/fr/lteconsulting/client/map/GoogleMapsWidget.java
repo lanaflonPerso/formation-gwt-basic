@@ -4,24 +4,22 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Widget;
 
-import fr.lteconsulting.client.map.Map.Options;
-import fr.lteconsulting.client.map.Map.Position;
-
 public class GoogleMapsWidget extends Widget
 {
 	private Map map;
+
+	public GoogleMapsWidget()
+	{
+		this( 49.1203, 6.1778 );
+	}
 
 	public GoogleMapsWidget( double lat, double lng )
 	{
 		Element element = DOM.createDiv();
 		setElement( element );
 
-		Position position = new Position();
-		position.lat = lat;
-		position.lng = lng;
-
-		Options options = new Options();
-		options.center = position;
+		Map.Options options = new Map.Options();
+		options.center = LatLngLiteral.create( lat, lng );
 		options.mapTypeId = "satellite";
 		options.scrollwheel = true;
 		options.zoom = 8;
@@ -29,12 +27,13 @@ public class GoogleMapsWidget extends Widget
 		map = new Map( element, options );
 	}
 
-	public void addMarker( double lat, double lng, String title )
+	public Marker addMarker( double lat, double lng, String title, boolean draggable )
 	{
-		Position position = new Position();
-		position.lat = lat;
-		position.lng = lng;
-		
-		Marker.addMarker( map, position, title );
+		return Marker.addMarker( map, LatLngLiteral.create( lat, lng ), title, draggable );
+	}
+
+	public void setCenter( double lat, double lng )
+	{
+		map.setCenter( LatLngLiteral.create( lat, lng ) );
 	}
 }

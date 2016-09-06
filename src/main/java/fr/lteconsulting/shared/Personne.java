@@ -15,6 +15,8 @@ public class Personne implements Serializable
 	private String motDePasse;
 	private Sexe sexe;
 	private boolean accepteMarketing;
+	private double latitude;
+	private double longitude;
 
 	public String getId()
 	{
@@ -84,6 +86,26 @@ public class Personne implements Serializable
 	public void setAccepteMarketing( boolean accepteMarketing )
 	{
 		this.accepteMarketing = accepteMarketing;
+	}
+
+	public double getLatitude()
+	{
+		return latitude;
+	}
+
+	public void setLatitude( double latitude )
+	{
+		this.latitude = latitude;
+	}
+
+	public double getLongitude()
+	{
+		return longitude;
+	}
+
+	public void setLongitude( double longitude )
+	{
+		this.longitude = longitude;
 	}
 
 	@Override

@@ -1,6 +1,5 @@
 package fr.lteconsulting.client.map;
 
-import fr.lteconsulting.client.map.Map.Position;
 import jsinterop.annotations.JsOverlay;
 import jsinterop.annotations.JsPackage;
 import jsinterop.annotations.JsType;
@@ -9,25 +8,34 @@ import jsinterop.annotations.JsType;
 public class Marker
 {
 	@JsType( isNative = true, namespace = JsPackage.GLOBAL, name = "Object" )
-	public static class Options
+	public static class MarkerOptions
 	{
 		public Map map;
-		public Position position;
+		public LatLngLiteral position;
 		public String title;
+		public boolean draggable;
 	}
 
 	@JsOverlay
-	public static void addMarker( Map map, Position position, String title )
+	public static Marker addMarker( Map map, LatLngLiteral position, String title, boolean draggable )
 	{
-		Options options = new Options();
+		MarkerOptions options = new MarkerOptions();
 		options.map = map;
 		options.position = position;
 		options.title = title;
+		options.draggable = draggable;
 
-		new Marker( options );
+		return new Marker( options );
 	}
 
-	public Marker( Options options )
+	public Marker( MarkerOptions options )
 	{
+		// vide, implémenté en JS
 	}
+
+	public native LatLng getPosition();
+
+	public native void setPosition( LatLng position );
+
+	public native void setPosition( LatLngLiteral position );
 }

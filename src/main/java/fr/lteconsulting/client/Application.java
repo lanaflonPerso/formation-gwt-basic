@@ -22,7 +22,6 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.SingleSelectionModel;
 
-import fr.lteconsulting.client.map.GoogleMapsWidget;
 import fr.lteconsulting.client.map.Map;
 import fr.lteconsulting.shared.Personne;
 import fr.lteconsulting.shared.PersonnesService;
@@ -32,7 +31,6 @@ public class Application implements EntryPoint
 {
 	private FormulairePersonne formulaire = new FormulairePersonne();
 	private Button okButton = new Button( "Valider" );
-	GoogleMapsWidget map = new GoogleMapsWidget( 49.1203, 6.1778 );
 
 	private CellList<Personne> cellList;
 	private Personne editedPersonne;
@@ -62,7 +60,7 @@ public class Application implements EntryPoint
 			@Override
 			public void onSuccess( List<Personne> result )
 			{
-				dataProvider.getList().clear();
+				//dataProvider.getList().clear();
 				dataProvider.getList().addAll( result );
 			}
 
@@ -105,7 +103,6 @@ public class Application implements EntryPoint
 		DockLayoutPanel layout = new DockLayoutPanel( Unit.EM );
 		layout.addNorth( menu, 2 );
 		layout.addWest( new ScrollPanel( cellList ), 14 );
-		layout.addEast( map, 44 );
 		layout.add( vp );
 
 		RootLayoutPanel.get().add( layout );
@@ -121,8 +118,6 @@ public class Application implements EntryPoint
 		} );
 
 		okButton.addClickHandler( event -> {
-			map.addMarker( 49.1202 + Math.random(), 6.1779 + Math.random(), editedPersonne.getNom() );
-
 			formulaire.updatePersonneFromForm( editedPersonne );
 
 			int personneIndex = dataProvider.getList().indexOf( editedPersonne );
