@@ -7,6 +7,8 @@ import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.cellview.client.CellList;
@@ -31,6 +33,8 @@ public class Application implements EntryPoint
 {
 	private FormulairePersonne formulaire = new FormulairePersonne();
 	private Button okButton = new Button( "Valider" );
+	private Button nouveauButton = new Button( "Nouveau" );
+	private Button effacerButton = new Button( "Effacer" );
 
 	private CellList<Personne> cellList;
 	private Personne editedPersonne;
@@ -42,6 +46,15 @@ public class Application implements EntryPoint
 	@Override
 	public void onModuleLoad()
 	{
+		com.google.gwt.core.client.GWT.setUncaughtExceptionHandler( e -> {
+			Throwable current = e;
+			while( current != null )
+			{
+				Window.alert( "ex " + current );
+				current = current.getCause();
+			}
+		} );
+
 		Scheduler.get().scheduleFixedDelay( () -> {
 			if( Map.googleMapsInitialized() )
 			{
@@ -60,7 +73,7 @@ public class Application implements EntryPoint
 			@Override
 			public void onSuccess( List<Personne> result )
 			{
-				//dataProvider.getList().clear();
+				dataProvider.getList().clear();
 				dataProvider.getList().addAll( result );
 			}
 
@@ -99,11 +112,13 @@ public class Application implements EntryPoint
 		VerticalPanel vp = new VerticalPanel();
 		vp.add( formulaire );
 		vp.add( okButton );
+		vp.add( nouveauButton );
+		vp.add( effacerButton );
 
 		DockLayoutPanel layout = new DockLayoutPanel( Unit.EM );
 		layout.addNorth( menu, 2 );
 		layout.addWest( new ScrollPanel( cellList ), 14 );
-		layout.add( vp );
+		layout.add( new ScrollPanel( vp ) );
 
 		RootLayoutPanel.get().add( layout );
 	}
@@ -122,6 +137,55 @@ public class Application implements EntryPoint
 
 			int personneIndex = dataProvider.getList().indexOf( editedPersonne );
 			dataProvider.getList().set( personneIndex, editedPersonne );
+		} );
+
+		nouveauButton.addClickHandler( event -> {
+			Personne personne = new Personne();
+			formulaire.updatePersonneFromForm( personne );
+
+			personnesService.createPersonne( personne, new AsyncCallback<Personne>()
+			{
+				@Override
+				public void onSuccess( Personne result )
+				{
+					dataProvider.getList().add( result );
+				}
+
+				@Override
+				public void onFailure( Throwable caught )
+				{
+					Window.alert( "aie ! " + caught );
+				}
+			} );
+		} );
+
+		effacerButton.addClickHandler( new ClickHandler()
+		{
+			@Override
+			public void onClick( ClickEvent event )
+			{
+				if( editedPersonne == null )
+					return;
+
+				personnesService.deletePersonne( editedPersonne.getId(), new AsyncCallback<Boolean>()
+				{
+					@Override
+					public void onSuccess( Boolean result )
+					{
+						if(result){
+							dataProvider.getList().remove( editedPersonne );
+							selectionModel.setSelected( editedPersonne, false );
+							editedPersonne = null;
+						}
+					}
+
+					@Override
+					public void onFailure( Throwable caught )
+					{
+						Window.alert( "aie ! " + caught );
+					}
+				} );
+			}
 		} );
 	}
 }

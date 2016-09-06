@@ -25,6 +25,7 @@ public class PersonnesRepository implements PersonnesService
 	@Override
 	public List<Personne> getPersonnes()
 	{
+		System.out.println( database.values() );
 		return new ArrayList<>( database.values() );
 	}
 
@@ -33,12 +34,15 @@ public class PersonnesRepository implements PersonnesService
 		for( int i = 0; i < 10; i++ )
 		{
 			Personne personne = new Personne();
+			personne.setId( UUID.randomUUID().toString() );
 			personne.setNom( Mots.nom() );
 			personne.setPrenom( Mots.nom() );
 			personne.setDateNaissance( new Date() );
 			personne.setMotDePasse( Mots.mot() );
 			personne.setSexe( Math.random() > 0.5 ? Sexe.Homme : Sexe.Femme );
 			personne.setAccepteMarketing( Math.random() > 0.5 );
+			personne.setLatitude( Math.random() * 180 - 90 );
+			personne.setLongitude( Math.random() * 360 - 180 );
 
 			database.put( personne.getId(), personne );
 		}
@@ -63,7 +67,7 @@ public class PersonnesRepository implements PersonnesService
 	public Personne updatePersonne( Personne personne )
 	{
 		database.put( personne.getId(), personne );
-		
+
 		return personne;
 	}
 }

@@ -2,7 +2,7 @@ package fr.lteconsulting.client.map;
 
 import jsinterop.annotations.JsType;
 
-@JsType( isNative = true, namespace = "goolge.maps" )
+@JsType( isNative = true, namespace = "google.maps" )
 public class LatLng
 {
 	public LatLng( double lat, double lng )

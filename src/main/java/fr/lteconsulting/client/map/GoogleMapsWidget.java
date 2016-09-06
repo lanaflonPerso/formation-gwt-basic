@@ -34,6 +34,7 @@ public class GoogleMapsWidget extends Widget
 
 	public void setCenter( double lat, double lng )
 	{
-		map.setCenter( LatLngLiteral.create( lat, lng ) );
+		LatLng center = new LatLng( lat, lng );
+		map.setCenter( center );
 	}
 }

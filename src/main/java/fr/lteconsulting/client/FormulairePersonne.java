@@ -98,7 +98,7 @@ public class FormulairePersonne extends Composite
 		table.setText( 6, 0, "Domicile" );
 		table.setWidget( 6, 1, map );
 
-		map.setSize( "20em", "20em" );
+		map.setSize( "30em", "30em" );
 		marker = map.addMarker( 0, 0, "Domicile", true );
 
 		return table;

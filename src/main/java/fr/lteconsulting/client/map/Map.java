@@ -27,4 +27,6 @@ public class Map
 	}
 
 	public native void setCenter( LatLngLiteral position );
+	
+	public native void setCenter( LatLng position );
 }
