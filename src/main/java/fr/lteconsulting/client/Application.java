@@ -46,14 +46,7 @@ public class Application implements EntryPoint
 	@Override
 	public void onModuleLoad()
 	{
-		com.google.gwt.core.client.GWT.setUncaughtExceptionHandler( e -> {
-			Throwable current = e;
-			while( current != null )
-			{
-				Window.alert( "ex " + current );
-				current = current.getCause();
-			}
-		} );
+		com.google.gwt.core.client.GWT.setUncaughtExceptionHandler( e -> Window.alert( "Exception " + e ) );
 
 		Scheduler.get().scheduleFixedDelay( () -> {
 			if( Map.googleMapsInitialized() )
@@ -64,6 +57,7 @@ public class Application implements EntryPoint
 		}, 250 );
 
 		initUi();
+
 		initHandlers();
 
 		dataProvider.addDataDisplay( cellList );
@@ -172,7 +166,8 @@ public class Application implements EntryPoint
 					@Override
 					public void onSuccess( Boolean result )
 					{
-						if(result){
+						if( result )
+						{
 							dataProvider.getList().remove( editedPersonne );
 							selectionModel.setSelected( editedPersonne, false );
 							editedPersonne = null;

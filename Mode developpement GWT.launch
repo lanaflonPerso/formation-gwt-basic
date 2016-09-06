@@ -16,7 +16,7 @@
 <stringAttribute key="org.eclipse.jdt.launching.CLASSPATH_PROVIDER" value="org.eclipse.m2e.launchconfig.classpathProvider"/>
 <booleanAttribute key="org.eclipse.jdt.launching.DEFAULT_CLASSPATH" value="false"/>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.google.gwt.dev.DevMode"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-generateJsInteropExports -gen target/gwt-gen -extra target/gwt-extra -workDir target/gwt-work -XmethodNameDisplayMode FULL -war target/gwt-base-1.0-SNAPSHOT -startupUrl http://localhost:8888 fr.lteconsulting.Application"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-gen target/gwt-gen -extra target/gwt-extra -workDir target/gwt-work -war target/gwt-base-1.0-SNAPSHOT -startupUrl http://localhost:8888 fr.lteconsulting.Application"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="gwt-base"/>
 <stringAttribute key="org.eclipse.jdt.launching.SOURCE_PATH_PROVIDER" value="org.eclipse.m2e.launchconfig.sourcepathProvider"/>
 </launchConfiguration>
