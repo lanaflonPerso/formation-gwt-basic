@@ -1,14 +1,17 @@
 package fr.lteconsulting.client;
 
-import java.util.Date;
+import java.util.List;
 
 import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.core.shared.GWT;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.cellview.client.CellList;
 import com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.MenuBar;
@@ -19,7 +22,8 @@ import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.SingleSelectionModel;
 
 import fr.lteconsulting.shared.Personne;
-import fr.lteconsulting.shared.Sexe;
+import fr.lteconsulting.shared.PersonnesService;
+import fr.lteconsulting.shared.PersonnesServiceAsync;
 
 public class Application implements EntryPoint
 {
@@ -29,7 +33,9 @@ public class Application implements EntryPoint
 	private CellList<Personne> cellList;
 	private Personne editedPersonne;
 
-	ListDataProvider<Personne> dataProvider = new ListDataProvider<>();
+	private PersonnesServiceAsync personnesService = GWT.create( PersonnesService.class );
+
+	private ListDataProvider<Personne> dataProvider = new ListDataProvider<>();
 
 	@Override
 	public void onModuleLoad()
@@ -39,7 +45,21 @@ public class Application implements EntryPoint
 
 		dataProvider.addDataDisplay( cellList );
 
-		genererDonnees();
+		personnesService.getPersonnes( new AsyncCallback<List<Personne>>()
+		{
+			@Override
+			public void onSuccess( List<Personne> result )
+			{
+				dataProvider.getList().clear();
+				dataProvider.getList().addAll( result );
+			}
+
+			@Override
+			public void onFailure( Throwable caught )
+			{
+				Window.alert( "Une erreur s'est produite : " + caught );
+			}
+		} );
 	}
 
 	private void initUi()
@@ -61,7 +81,7 @@ public class Application implements EntryPoint
 
 		MenuBar fileMenu = new MenuBar( true );
 
-		fileMenu.addItem( "Générer", this::genererDonnees );
+		fileMenu.addItem( "Générer", () -> Window.alert( "Not yet implemented" ) );
 
 		MenuBar menu = new MenuBar();
 		menu.addItem( "File", fileMenu );
@@ -93,21 +113,5 @@ public class Application implements EntryPoint
 			int personneIndex = dataProvider.getList().indexOf( editedPersonne );
 			dataProvider.getList().set( personneIndex, editedPersonne );
 		} );
-	}
-
-	private void genererDonnees()
-	{
-		for( int i = 0; i < 10; i++ )
-		{
-			Personne personne = new Personne();
-			personne.setNom( Mots.nom() );
-			personne.setPrenom( Mots.nom() );
-			personne.setDateNaissance( new Date() );
-			personne.setMotDePasse( Mots.mot() );
-			personne.setSexe( Math.random() > 0.5 ? Sexe.Homme : Sexe.Femme );
-			personne.setAccepteMarketing( Math.random() > 0.5 );
-
-			dataProvider.getList().add( personne );
-		}
 	}
 }

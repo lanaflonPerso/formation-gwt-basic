@@ -88,14 +88,6 @@
 						</goals>
 					</execution>
 				</executions>
-				<configuration>
-					<webappDirectory>${webappDirectory}</webappDirectory>
-					<webResources>
-						<resource>
-							<directory>${project.build.directory}/${project.build.finalName}</directory>
-						</resource>
-					</webResources>
-				</configuration>
 			</plugin>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>

@@ -1,9 +1,12 @@
 package fr.lteconsulting.shared;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Personne
+public class Personne implements Serializable
 {
+	private static final long serialVersionUID = -9009571766643019434L;
+
 	private String nom;
 	private String prenom;
 	private Date dateNaissance;
