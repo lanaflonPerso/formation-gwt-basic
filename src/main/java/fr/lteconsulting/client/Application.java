@@ -1,6 +1,5 @@
 package fr.lteconsulting.client;
 
-import java.util.ArrayList;
 import java.util.Date;
 
 import com.google.gwt.cell.client.AbstractCell;
@@ -14,6 +13,7 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
+import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.SingleSelectionModel;
@@ -29,7 +29,7 @@ public class Application implements EntryPoint
 	private CellList<Personne> cellList;
 	private Personne editedPersonne;
 
-	ListDataProvider<Personne> dataProvider = new ListDataProvider<>( new ArrayList<>() );
+	ListDataProvider<Personne> dataProvider = new ListDataProvider<>();
 
 	@Override
 	public void onModuleLoad()
@@ -49,13 +49,18 @@ public class Application implements EntryPoint
 			@Override
 			public void render( Context context, Personne value, SafeHtmlBuilder sb )
 			{
-				sb.append( SafeHtmlUtils.fromString( value.getPrenom() + " " + value.getNom() ) );
+				sb.append( SafeHtmlUtils.fromString( value.getPrenom() ) );
+				sb.append( SafeHtmlUtils.fromSafeConstant( " " ) );
+				sb.append( SafeHtmlUtils.fromTrustedString( "<b>" ) );
+				sb.append( SafeHtmlUtils.fromString( value.getNom() ) );
+				sb.append( SafeHtmlUtils.fromTrustedString( "</b>" ) );
 			}
 		} );
 		cellList.setKeyboardSelectionPolicy( KeyboardSelectionPolicy.ENABLED );
 		cellList.setPageSize( 500 );
 
 		MenuBar fileMenu = new MenuBar( true );
+
 		fileMenu.addItem( "Générer", this::genererDonnees );
 
 		MenuBar menu = new MenuBar();
@@ -67,7 +72,7 @@ public class Application implements EntryPoint
 
 		DockLayoutPanel layout = new DockLayoutPanel( Unit.EM );
 		layout.addNorth( menu, 2 );
-		layout.addWest( cellList, 14 );
+		layout.addWest( new ScrollPanel( cellList ), 14 );
 		layout.add( vp );
 
 		RootLayoutPanel.get().add( layout );
@@ -84,7 +89,9 @@ public class Application implements EntryPoint
 
 		okButton.addClickHandler( event -> {
 			formulaire.updatePersonneFromForm( editedPersonne );
-			dataProvider.getList().set( dataProvider.getList().indexOf( editedPersonne ), editedPersonne );
+
+			int personneIndex = dataProvider.getList().indexOf( editedPersonne );
+			dataProvider.getList().set( personneIndex, editedPersonne );
 		} );
 	}
 
