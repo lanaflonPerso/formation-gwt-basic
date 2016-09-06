@@ -7,12 +7,24 @@ public class Personne implements Serializable
 {
 	private static final long serialVersionUID = -9009571766643019434L;
 
+	private String id;
+
 	private String nom;
 	private String prenom;
 	private Date dateNaissance;
 	private String motDePasse;
 	private Sexe sexe;
 	private boolean accepteMarketing;
+
+	public String getId()
+	{
+		return id;
+	}
+
+	public void setId( String id )
+	{
+		this.id = id;
+	}
 
 	public String getNom()
 	{

@@ -9,4 +9,10 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 public interface PersonnesService extends RemoteService
 {
 	List<Personne> getPersonnes();
+
+	Personne createPersonne( Personne personne );
+
+	boolean deletePersonne( String id );
+
+	Personne updatePersonne( Personne personne );
 }
