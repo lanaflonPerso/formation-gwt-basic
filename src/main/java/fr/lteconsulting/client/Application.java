@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
@@ -21,6 +22,8 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.SingleSelectionModel;
 
+import fr.lteconsulting.client.map.GoogleMapsWidget;
+import fr.lteconsulting.client.map.Map;
 import fr.lteconsulting.shared.Personne;
 import fr.lteconsulting.shared.PersonnesService;
 import fr.lteconsulting.shared.PersonnesServiceAsync;
@@ -29,6 +32,7 @@ public class Application implements EntryPoint
 {
 	private FormulairePersonne formulaire = new FormulairePersonne();
 	private Button okButton = new Button( "Valider" );
+	GoogleMapsWidget map = new GoogleMapsWidget( 49.1203, 6.1778 );
 
 	private CellList<Personne> cellList;
 	private Personne editedPersonne;
@@ -40,6 +44,14 @@ public class Application implements EntryPoint
 	@Override
 	public void onModuleLoad()
 	{
+		Scheduler.get().scheduleFixedDelay( () -> {
+			if( Map.googleMapsInitialized() )
+			{
+				return false;
+			}
+			return true;
+		}, 250 );
+
 		initUi();
 		initHandlers();
 
@@ -93,6 +105,7 @@ public class Application implements EntryPoint
 		DockLayoutPanel layout = new DockLayoutPanel( Unit.EM );
 		layout.addNorth( menu, 2 );
 		layout.addWest( new ScrollPanel( cellList ), 14 );
+		layout.addEast( map, 44 );
 		layout.add( vp );
 
 		RootLayoutPanel.get().add( layout );
@@ -108,6 +121,8 @@ public class Application implements EntryPoint
 		} );
 
 		okButton.addClickHandler( event -> {
+			map.addMarker( 49.1202 + Math.random(), 6.1779 + Math.random(), editedPersonne.getNom() );
+
 			formulaire.updatePersonneFromForm( editedPersonne );
 
 			int personneIndex = dataProvider.getList().indexOf( editedPersonne );

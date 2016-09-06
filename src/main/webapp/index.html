@@ -9,5 +9,14 @@
 <script type="text/javascript" src="application/application.nocache.js"></script>
 </head>
 <body>
+	<script type="text/javascript">
+		//window.googleMapsInitialized = false;
+		initMap = function() {
+			window.googleMapsInitialized = true;
+		}
+	</script>
+	<script
+		src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBhNg4XliUYRuhjWSrkNHmxd1wN360PCmE&callback=initMap"
+		async defer></script>
 </body>
 </html>
