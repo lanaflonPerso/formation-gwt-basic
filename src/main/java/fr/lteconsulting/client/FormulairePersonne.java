@@ -1,5 +1,7 @@
 package fr.lteconsulting.client;
 
+import java.util.Date;
+
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlexTable;
@@ -47,9 +49,9 @@ public class FormulairePersonne extends Composite
 		personne.setLongitude( marker.getPosition().lng() );
 	}
 
-	public void updateFormFromPersonne( Personne p )
+	public void updateFormFromPersonne( Personne personne )
 	{
-		if( p == null )
+		if( personne == null )
 		{
 			nom.setText( "" );
 			prenom.setText( "" );
@@ -61,15 +63,18 @@ public class FormulairePersonne extends Composite
 		}
 		else
 		{
-			nom.setText( p.getNom() );
-			prenom.setText( p.getPrenom() );
-			dateNaissance.setValue( p.getDateNaissance() );
-			dateNaissance.setCurrentMonth( p.getDateNaissance() );
-			motDePasse.setText( p.getMotDePasse() );
-			selectSexe( p.getSexe() );
-			accepteMarketing.setValue( p.isAccepteMarketing() );
-			marker.setPosition( new LatLng( p.getLatitude(), p.getLongitude() ) );
-			map.setCenter( p.getLatitude(), p.getLongitude() );
+			nom.setText( personne.getNom() );
+			prenom.setText( personne.getPrenom() );
+			Date date = personne.getDateNaissance();
+			if( date == null )
+				date = new Date();
+			dateNaissance.setValue( date );
+			dateNaissance.setCurrentMonth( date );
+			motDePasse.setText( personne.getMotDePasse() );
+			selectSexe( personne.getSexe() );
+			accepteMarketing.setValue( personne.isAccepteMarketing() );
+			marker.setPosition( new LatLng( personne.getLatitude(), personne.getLongitude() ) );
+			map.setCenter( personne.getLatitude(), personne.getLongitude() );
 		}
 	}
 

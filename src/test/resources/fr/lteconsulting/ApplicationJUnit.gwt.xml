@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module rename-to="applicationtests">
+	<inherits name='fr.lteconsulting.Application' />
+
+	<servlet path="/applicationtests/personnes" class="fr.lteconsulting.server.PersonnesServiceImpl" />
+</module>
