@@ -92,6 +92,7 @@
 					<gen>${basedir}/target/gwt-gen</gen>
 					<persistentunitcache>true</persistentunitcache>
 					<persistentunitcachedir>${basedir}/target/gwt-unitCache</persistentunitcachedir>
+					<compileReport>true</compileReport>
 				</configuration>
 			</plugin>
 			<plugin>

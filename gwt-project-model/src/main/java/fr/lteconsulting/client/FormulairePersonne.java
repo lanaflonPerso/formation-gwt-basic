@@ -2,6 +2,9 @@ package fr.lteconsulting.client;
 
 import java.util.Date;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.RunAsyncCallback;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlexTable;
@@ -28,7 +31,25 @@ public class FormulairePersonne extends Composite
 	private GoogleMapsWidget map = new GoogleMapsWidget();
 	private Marker marker = null;
 
-	public FormulairePersonne()
+	public static void create( AsyncCallback<FormulairePersonne> callback )
+	{
+		GWT.runAsync( new RunAsyncCallback()
+		{
+			@Override
+			public void onSuccess()
+			{
+				callback.onSuccess( new FormulairePersonne() );
+			}
+
+			@Override
+			public void onFailure( Throwable reason )
+			{
+				callback.onFailure( reason );
+			}
+		} );
+	}
+
+	private FormulairePersonne()
 	{
 		initListBox();
 		initWidget( createUi() );

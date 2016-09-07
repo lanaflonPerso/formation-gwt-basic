@@ -4,13 +4,12 @@ import java.util.List;
 
 import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.shared.GWT;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
-import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.cellview.client.CellList;
 import com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy;
 import com.google.gwt.user.client.Window;
@@ -31,7 +30,7 @@ import fr.lteconsulting.shared.PersonnesServiceAsync;
 
 public class Application implements EntryPoint
 {
-	private FormulairePersonne formulaire = new FormulairePersonne();
+	private FormulairePersonne formulaire;
 	private Button okButton = new Button( "Valider" );
 	private Button nouveauButton = new Button( "Nouveau" );
 	private Button effacerButton = new Button( "Effacer" );
@@ -46,7 +45,7 @@ public class Application implements EntryPoint
 	@Override
 	public void onModuleLoad()
 	{
-		com.google.gwt.core.client.GWT.setUncaughtExceptionHandler( e -> Window.alert( "Exception " + e ) );
+		GWT.setUncaughtExceptionHandler( e -> Window.alert( "Exception " + e ) );
 
 		Scheduler.get().scheduleFixedDelay( () -> {
 			if( Map.googleMapsInitialized() )
@@ -56,11 +55,7 @@ public class Application implements EntryPoint
 			return true;
 		}, 250 );
 
-		initUi();
-
-		initHandlers();
-
-		dataProvider.addDataDisplay( cellList );
+		prepareUi();
 
 		personnesService.getPersonnes( new AsyncCallback<List<Personne>>()
 		{
@@ -79,18 +74,43 @@ public class Application implements EntryPoint
 		} );
 	}
 
-	private void initUi()
+	private void continueInit()
+	{
+		initHandlers();
+
+		dataProvider.addDataDisplay( cellList );
+	}
+
+	private void prepareUi()
+	{
+		FormulairePersonne.create( new AsyncCallback<FormulairePersonne>()
+		{
+			@Override
+			public void onSuccess( FormulairePersonne formulaire )
+			{
+				Application.this.formulaire = formulaire;
+
+				initUi( formulaire );
+			}
+
+			@Override
+			public void onFailure( Throwable caught )
+			{
+				Window.alert( caught.toString() );
+			}
+		} );
+	}
+
+	private void initUi( FormulairePersonne formulaire )
 	{
 		cellList = new CellList<Personne>( new AbstractCell<Personne>()
 		{
 			@Override
 			public void render( Context context, Personne value, SafeHtmlBuilder sb )
 			{
-				sb.append( SafeHtmlUtils.fromString( value.getPrenom() ) );
-				sb.append( SafeHtmlUtils.fromSafeConstant( " " ) );
-				sb.append( SafeHtmlUtils.fromTrustedString( "<b>" ) );
-				sb.append( SafeHtmlUtils.fromString( value.getNom() ) );
-				sb.append( SafeHtmlUtils.fromTrustedString( "</b>" ) );
+				sb.append( PersonneTemplate.INSTANCE.display(
+						value.getPrenom(),
+						value.getNom() ) );
 			}
 		} );
 		cellList.setKeyboardSelectionPolicy( KeyboardSelectionPolicy.ENABLED );
@@ -115,6 +135,8 @@ public class Application implements EntryPoint
 		layout.add( new ScrollPanel( vp ) );
 
 		RootLayoutPanel.get().add( layout );
+
+		continueInit();
 	}
 
 	private void initHandlers()
