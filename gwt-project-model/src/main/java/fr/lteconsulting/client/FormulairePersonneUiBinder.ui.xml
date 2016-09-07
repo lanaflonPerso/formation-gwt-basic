@@ -1,0 +1,51 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+	xmlns:gwt='urn:import:com.google.gwt.user.client.ui' xmlns:dp='urn:import:com.google.gwt.user.datepicker.client'
+	xmlns:appli='urn:import:fr.lteconsulting.client.map'>
+	<gwt:HTMLPanel>
+		<table>
+			<tr>
+				<td>Nom</td>
+				<td>
+					<gwt:TextBox ui:field='nom' />
+				</td>
+			</tr>
+			<tr>
+				<td>Prénom</td>
+				<td>
+					<gwt:TextBox ui:field='prenom' />
+				</td>
+			</tr>
+			<tr>
+				<td>Date de naissance</td>
+				<td>
+					<dp:DatePicker ui:field='dateNaissance' />
+				</td>
+			</tr>
+			<tr>
+				<td>Mot de passe</td>
+				<td>
+					<gwt:PasswordTextBox ui:field='motDePasse' />
+				</td>
+			</tr>
+			<tr>
+				<td>Sexe</td>
+				<td>
+					<gwt:ListBox ui:field='sexe' />
+				</td>
+			</tr>
+			<tr>
+				<td>Accepte marketing</td>
+				<td>
+					<gwt:CheckBox ui:field='accepteMarketing' />
+				</td>
+			</tr>
+			<tr>
+				<td>Adresse</td>
+				<td>
+					<appli:GoogleMapsWidget width='30em' height='20em'
+						ui:field='map' />
+				</td>
+			</tr>
+		</table>
+	</gwt:HTMLPanel>
+</ui:UiBinder>

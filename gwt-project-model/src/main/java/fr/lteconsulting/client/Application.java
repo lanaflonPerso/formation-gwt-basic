@@ -30,7 +30,7 @@ import fr.lteconsulting.shared.PersonnesServiceAsync;
 
 public class Application implements EntryPoint
 {
-	private FormulairePersonne formulaire;
+	private IFormulairePersonne formulaire = new FormulairePersonneUiBinder();
 	private Button okButton = new Button( "Valider" );
 	private Button nouveauButton = new Button( "Nouveau" );
 	private Button effacerButton = new Button( "Effacer" );
@@ -55,7 +55,7 @@ public class Application implements EntryPoint
 			return true;
 		}, 250 );
 
-		prepareUi();
+		initUi();
 
 		personnesService.getPersonnes( new AsyncCallback<List<Personne>>()
 		{
@@ -81,27 +81,7 @@ public class Application implements EntryPoint
 		dataProvider.addDataDisplay( cellList );
 	}
 
-	private void prepareUi()
-	{
-		FormulairePersonne.create( new AsyncCallback<FormulairePersonne>()
-		{
-			@Override
-			public void onSuccess( FormulairePersonne formulaire )
-			{
-				Application.this.formulaire = formulaire;
-
-				initUi( formulaire );
-			}
-
-			@Override
-			public void onFailure( Throwable caught )
-			{
-				Window.alert( caught.toString() );
-			}
-		} );
-	}
-
-	private void initUi( FormulairePersonne formulaire )
+	private void initUi()
 	{
 		cellList = new CellList<Personne>( new AbstractCell<Personne>()
 		{

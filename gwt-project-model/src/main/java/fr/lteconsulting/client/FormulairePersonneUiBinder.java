@@ -2,9 +2,12 @@ package fr.lteconsulting.client;
 
 import java.util.Date;
 
+import com.google.gwt.core.shared.GWT;
+import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiTemplate;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.TextBox;
@@ -17,23 +20,45 @@ import fr.lteconsulting.client.map.Marker;
 import fr.lteconsulting.shared.Personne;
 import fr.lteconsulting.shared.Sexe;
 
-public class FormulairePersonne extends Composite implements IFormulairePersonne
+public class FormulairePersonneUiBinder extends Composite implements IFormulairePersonne
 {
-	private TextBox nom = new TextBox();
-	private TextBox prenom = new TextBox();
-	private DatePicker dateNaissance = new DatePicker();
-	private PasswordTextBox motDePasse = new PasswordTextBox();
-	private ListBox sexe = new ListBox();
-	private CheckBox accepteMarketing = new CheckBox();
-	private GoogleMapsWidget map = new GoogleMapsWidget();
+	@UiField
+	TextBox nom;
+
+	@UiField
+	TextBox prenom;
+
+	@UiField
+	DatePicker dateNaissance;
+
+	@UiField
+	PasswordTextBox motDePasse;
+
+	@UiField
+	ListBox sexe;
+
+	@UiField
+	CheckBox accepteMarketing;
+
+	@UiField
+	GoogleMapsWidget map;
+
 	private Marker marker = null;
 
-	public FormulairePersonne()
+	@UiTemplate( "FormulairePersonneUiBinder.ui.xml" )
+	interface MyUiBinder extends UiBinder<Widget, FormulairePersonneUiBinder>
 	{
-		ensureDebugId( "LeFormulairePersonne" );
+	}
+
+	private static final MyUiBinder binder = GWT.create( MyUiBinder.class );
+
+	public FormulairePersonneUiBinder()
+	{
+		initWidget( binder.createAndBindUi( this ) );
 
 		initListBox();
-		initWidget( createUi() );
+
+		marker = map.addMarker( 0, 0, "Domicile", true );
 	}
 
 	public void updatePersonneFromForm( Personne personne )
@@ -78,37 +103,6 @@ public class FormulairePersonne extends Composite implements IFormulairePersonne
 			marker.setPosition( new LatLng( personne.getLatitude(), personne.getLongitude() ) );
 			map.setCenter( personne.getLatitude(), personne.getLongitude() );
 		}
-	}
-
-	private Widget createUi()
-	{
-		FlexTable table = new FlexTable();
-
-		table.setText( 0, 0, "Nom" );
-		table.setWidget( 0, 1, nom );
-
-		table.setText( 1, 0, "Prénom" );
-		table.setWidget( 1, 1, prenom );
-
-		table.setText( 2, 0, "Date de naissance" );
-		table.setWidget( 2, 1, dateNaissance );
-
-		table.setText( 3, 0, "Mot de passe" );
-		table.setWidget( 3, 1, motDePasse );
-
-		table.setText( 4, 0, "Sexe" );
-		table.setWidget( 4, 1, sexe );
-
-		table.setText( 5, 0, "Accepte le marketing" );
-		table.setWidget( 5, 1, accepteMarketing );
-
-		table.setText( 6, 0, "Domicile" );
-		table.setWidget( 6, 1, map );
-
-		map.setSize( "30em", "30em" );
-		marker = map.addMarker( 0, 0, "Domicile", true );
-
-		return table;
 	}
 
 	private void initListBox()
